@@ -4,6 +4,8 @@ on:
   push:
     branches:
       - main
+    paths:
+      - growi/hedgedoc/**
 
 jobs:
   push_to_registry:
