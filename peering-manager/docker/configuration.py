@@ -28,6 +28,7 @@ def get_sys_tz():
 
     return tz
 
+
 # This is a list of valid fully-qualified domain names (FQDNs) for this server.
 # The server will not permit write access to the server via any other
 # hostnames. The first FQDN in the list will be treated as the preferred name.
@@ -43,9 +44,6 @@ BASE_PATH = os.environ.get("BASE_PATH", "")
 
 # Time zone to use for date.
 TIME_ZONE = os.environ.get("TIME_ZONE", get_sys_tz())
-
-# Autonomous System number
-MY_ASN = int(os.environ.get("MY_ASN", 64512))
 
 # PostgreSQL database configuration
 DATABASE = {
@@ -69,31 +67,25 @@ REDIS = {
         "PORT": int(os.environ.get("REDIS_PORT", 6379)),
         "PASSWORD": os.environ.get("REDIS_PASSWORD", read_secret("redis_password")),
         "DATABASE": int(os.environ.get("REDIS_DATABASE", 0)),
-        "DEFAULT_TIMEOUT": int(os.environ.get("REDIS_TIMEOUT", 300)),
         "SSL": os.environ.get("REDIS_SSL", "False").lower() == "true",
     },
     "caching": {
         "HOST": os.environ.get(
             "REDIS_CACHE_HOST", os.environ.get("REDIS_HOST", "localhost")
         ),
-        "PORT": os.environ.get(
-            "REDIS_CACHE_PORT",
-            os.environ.get("REDIS_PORT", 6379)
-        ),
+        "PORT": os.environ.get("REDIS_CACHE_PORT", os.environ.get("REDIS_PORT", 6379)),
         "PASSWORD": os.environ.get(
             "REDIS_CACHE_PASSWORD",
             os.environ.get("REDIS_PASSWORD", read_secret("redis_cache_password")),
         ),
         "DATABASE": int(os.environ.get("REDIS_CACHE_DATABASE", 1)),
-        "DEFAULT_TIMEOUT": int(
-            os.environ.get("REDIS_CACHE_TIMEOUT", os.environ.get("REDIS_TIMEOUT", 300))
-        ),
         "SSL": os.environ.get(
             "REDIS_CACHE_SSL", os.environ.get("REDIS_SSL", "False")
         ).lower()
-        == "true",
+               == "true",
     },
 }
+RQ_DEFAULT_TIMEOUT = int(os.environ.get("CACHE_TIMEOUT", 300))
 # Cache timeout in seconds. Set to 0 to disable caching.
 CACHE_TIMEOUT = int(os.environ.get("CACHE_TIMEOUT", 900))
 
@@ -113,6 +105,7 @@ EMAIL = {
 }
 
 CHANGELOG_RETENTION = int(os.environ.get("CHANGELOG_RETENTION", 90))
+JOBRESULT_RETENTION = int(os.environ.get("JOBRESULT_RETENTION", 90))
 LOGIN_REQUIRED = os.environ.get("LOGIN_REQUIRED", "False").lower() == "true"
 BANNER_LOGIN = os.environ.get("BANNER_LOGIN", "")
 PEERINGDB_USERNAME = os.environ.get("PEERINGDB_USERNAME", "")
@@ -143,21 +136,34 @@ BGPQ3_ARGS = {
     "ipv6": os.environ.get("BGPQ3_ARGS_IPV6", "-r 16 -R 48").split(" "),
     "ipv4": os.environ.get("BGPQ3_ARGS_IPV4", "-r 8 -R 24").split(" "),
 }
-NETBOX_API = os.environ.get("NETBOX_API", None)
+NETBOX_API = os.environ.get("NETBOX_API", "")
 NETBOX_API_TOKEN = os.environ.get("NETBOX_API_TOKEN", read_secret("netbox_api_token"))
-NETBOX_DEVICE_ROLES = os.environ.get(
-    "NETBOX_DEVICE_ROLES", "router,firewall,switch"
-).split(",")
+NETBOX_API_THREADING = os.environ.get("NETBOX_API_THREADING", "False").lower() == "true"
+NETBOX_API_VERIFY_SSL = (
+        os.environ.get("NETBOX_API_VERIFY_SSL", "True").lower() == "true"
+)
+NETBOX_DEVICE_ROLES = os.environ.get("NETBOX_DEVICE_ROLES", "router,firewall").split(
+    ","
+)
+NETBOX_TAGS = set(
+    os.environ.get("NETBOX_TAGS", "").split(",")
+    if os.environ.get("NETBOX_TAGS", "").count(",") > 0
+    else []
+)
 RELEASE_CHECK_URL = os.environ.get(
     "RELEASE_CHECK_URL",
     "https://api.github.com/repos/peering-manager/peering-manager/releases",
 )
-RELEASE_CHECK_TIMEOUT = os.environ.get("RELEASE_CHECK_TIMEOUT", 86400)
 SOFTDELETE_ENABLED = os.environ.get("SOFTDELETE_ENABLED", "False").lower() == "true"
 SOFTDELETE_RETENTION = int(os.environ.get("SOFTDELETE_RETENTION", CHANGELOG_RETENTION))
-DATE_FORMAT = os.environ.get('DATE_FORMAT', 'N j, Y')
-SHORT_DATE_FORMAT = os.environ.get('SHORT_DATE_FORMAT', 'Y-m-d')
-TIME_FORMAT = os.environ.get('TIME_FORMAT', 'g:i a')
-SHORT_TIME_FORMAT = os.environ.get('SHORT_TIME_FORMAT', 'H:i:s')
-DATETIME_FORMAT = os.environ.get('DATETIME_FORMAT', 'N j, Y g:i a')
-SHORT_DATETIME_FORMAT = os.environ.get('SHORT_DATETIME_FORMAT', 'Y-m-d H:i')
+DATE_FORMAT = os.environ.get("DATE_FORMAT", "jS F, Y")
+DATETIME_FORMAT = os.environ.get("DATETIME_FORMAT", "jS F, Y G:i")
+SHORT_DATE_FORMAT = os.environ.get("SHORT_DATE_FORMAT", "Y-m-d")
+SHORT_DATETIME_FORMAT = os.environ.get("SHORT_DATETIME_FORMAT", "Y-m-d H:i")
+SHORT_TIME_FORMAT = os.environ.get("SHORT_TIME_FORMAT", "H:i:s")
+TIME_FORMAT = os.environ.get("TIME_FORMAT", "G:i")
+
+# Enable custom logging. Please see the Django documentation for detailed
+# guidance on configuring custom logs:
+# https://docs.djangoproject.com/en/stable/topics/logging/
+LOGGING = {}
