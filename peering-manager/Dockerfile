@@ -2,7 +2,7 @@ FROM python:3.9.8-buster
 
 WORKDIR /opt/peering-manager
 
-ARG BRANCH=v1.7.3
+ARG BRANCH=v1.7.4
 # ARG BRANCH=v1.6.1
 ARG URL=https://github.com/peering-manager/peering-manager.git
 RUN git clone --depth 1 $URL -b $BRANCH .  && \
