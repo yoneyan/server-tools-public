@@ -2,7 +2,7 @@ FROM python:3.9.8-buster
 
 WORKDIR /opt/netbox
 
-ARG BRANCH=v3.4.2
+ARG BRANCH=v3.4.6
 #ARG BRANCH=v2.11.12
 ARG URL=https://github.com/digitalocean/netbox.git
 RUN git clone --depth 1 $URL -b $BRANCH .  && \
