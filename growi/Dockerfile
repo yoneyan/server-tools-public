@@ -4,7 +4,7 @@ WORKDIR /opt
 RUN apt update && \
     apt install -y curl git python make g++ wget openssl
 
-RUN git clone https://github.com/weseek/growi -b v5.1.8 growi
+RUN git clone https://github.com/weseek/growi -b v6.0.10 growi
 
 WORKDIR /opt/growi
 
