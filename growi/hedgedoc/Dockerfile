@@ -1,8 +1,8 @@
 FROM node:16.10.0-slim
 
-ARG BUILD_DATE="2022/08/28"
-ARG VERSION="0.2"
-ARG HEDGEDOC_RELEASE="1.9.7"
+ARG BUILD_DATE="2023/07/30"
+ARG VERSION="0.3"
+ARG HEDGEDOC_RELEASE="1.9.8"
 LABEL build_version="doornoc.net version:- ${VERSION} Build-date:- ${BUILD_DATE}"
 LABEL maintainer="yoneyan"
 
